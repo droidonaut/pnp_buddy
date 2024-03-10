@@ -3,33 +3,33 @@ import { SupabaseClient, createClient } from '@supabase/supabase-js';
 import { ref, onMounted } from 'vue';
 import { useSupabase } from '../../composables/useSupabase';
 
-const { blubb } = useSupabase();
+const { getEntries, getRandom } = useSupabase();
 
-const supabase = createClient('https://nhfhvzzxyggqmpcajkfm.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5oZmh2enp4eWdncW1wY2Fqa2ZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTAwNzYzMjEsImV4cCI6MjAyNTY1MjMyMX0.KI3h6_eT7oK3eGOJWKIXLC3mdI1AoG-x5cgENp2lgdQ')
 const blah = ref([]);
-// async function getCountries() {
-    
-//     let { data, error } = await supabase
-//         .from('weapon')
-//         .select('*')
-          
-//     //const { data } = await supabase.from('weapon').select()
-//     //console.log('a', data);
-// }
+
+const lootedItem = ref();
 
 onMounted(async () => {
-    // getCountries()
-    blah.value = await blubb('weapon');
-    console.log(blah);
+    //blah.value = await getEntries('weapon');
+    getRandom()
 })
+
+const getRandomLoot = async (type?: string|null) => {
+    lootedItem.value = await getRandom(type);
+    // console.log(lootedItem)
+}
 </script>
 
 <template>
-    Here will be something
-    <div
+    <button @click="getRandomLoot()"> random loot </button>
+    <button @click="getRandomLoot('armour')"> random armour </button>
+    <button @click="getRandomLoot('weapon')"> random weapon </button>
+    <button @click="getRandomLoot('item')"> random loot </button>
+    <!-- <div
         v-for="entry in blah"
         :key="entry.id"
     >
         {{ entry.name }}
-    </div>
+    </div> -->
+    <div v-if="lootedItem">{{ lootedItem.name }}</div>
 </template>
