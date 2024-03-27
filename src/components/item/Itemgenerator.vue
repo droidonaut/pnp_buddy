@@ -1,35 +1,75 @@
 <script setup lang="ts">
-import { SupabaseClient, createClient } from '@supabase/supabase-js';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useSupabase } from '../../composables/useSupabase';
+import Item from './Item.vue';
 
-const { getEntries, getRandom } = useSupabase();
+const { getRandom } = useSupabase();
 
-const blah = ref([]);
+const lootedItems = ref([]);
+const selectedDiceValue = ref<number|null>();
+const leftValue = ref<number>(0);
 
-const lootedItem = ref();
-
-onMounted(async () => {
-    //blah.value = await getEntries('weapon');
-    getRandom()
-})
-
-const getRandomLoot = async (type?: string|null) => {
-    lootedItem.value = await getRandom(type);
-    // console.log(lootedItem)
+const getRandomLoot = async (value: number, type?: string|null) => {
+    lootedItems.value = [];
+    leftValue.value = 0;
+    selectedDiceValue.value = value;
+    let lootedValue = 0;
+    let retries = 5;
+    while (lootedValue < value) {
+        if( retries <= 0 ) {
+            leftValue.value += (value - lootedValue);
+            return;
+        }
+        const lootedItem = await getRandom(value - lootedValue, type);
+        if(!lootedItem) {
+            retries--;
+            continue;
+        }
+        if(!!(Math.floor(Math.random() * 10 + 1) % 2)) {
+            leftValue.value += lootedItem['dice_value']
+        lootedValue += lootedItem['dice_value'];
+            continue;
+        }
+        lootedItems.value.push(lootedItem);
+        lootedValue += lootedItem['dice_value'];
+    }
 }
 </script>
 
 <template>
-    <button @click="getRandomLoot()"> random loot </button>
-    <button @click="getRandomLoot('armour')"> random armour </button>
-    <button @click="getRandomLoot('weapon')"> random weapon </button>
-    <button @click="getRandomLoot('item')"> random loot </button>
-    <!-- <div
-        v-for="entry in blah"
-        :key="entry.id"
+    <div class="flex w-full flex-wrap pb-6">
+        <button 
+            v-for="i in 20" 
+            :key="`loot-button-${i}`"
+            @click="getRandomLoot(i)"
+            class="basis-1/5 p-2"
+        >
+            <div 
+                class="bg-black py-2 rounded"
+                :class=" i === selectedDiceValue ? 'bg-emerald-900' : 'bg-neutral-950 opacity-60'"
+            >
+                {{ i }}
+            </div>
+        </button>
+    </div>
+
+    <div
+        v-if="lootedItems"
+        class="flex gap-2 flex-col pb-6"
     >
-        {{ entry.name }}
-    </div> -->
-    <div v-if="lootedItem">{{ lootedItem.name }}</div>
+        <template 
+            v-for="item in lootedItems"
+        >
+            <Item :item="item" />
+        </template>
+    </div>
+    <div
+        v-if="leftValue"
+        class="mx-2"
+    >
+        übrig: {{ leftValue }}
+    </div>
 </template>
+
+<style>
+</style>

@@ -8,31 +8,36 @@ export function useSupabase() {
         supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_TOKEN)
     }
 
-    const getEntries = async (tableName: string) => {
+    const getEntries = async (tableName: string, diceValue: number) => {
         // getRandom();
         if(!supabase) {
             createSupabaseClient();
         }
+        const rarity = getRarity();
         
-        const {data} = await supabase.from(tableName).select();
+        const {data} = await supabase
+            .from(tableName)
+            .select()
+            .lt('dice_value', diceValue)
+            .eq('rarity', rarity);
         return data;
     }
 
-    const getArmours = async () => {
-        return await getEntries('armour');
+    const getArmours = async (diceValue: number) => {
+        return await getEntries('armour', diceValue);
     }
 
-    const getWeapons = async () => {
-        return await getEntries('weapon');
+    const getWeapons = async (diceValue: number) => {
+        return await getEntries('weapon', diceValue);
     }
 
-    const getItems = async () => {
-        return await getEntries('item');
+    const getItems = async (diceValue: number) => {
+        return await getEntries('item', diceValue);
     }
 
-    const getRandom =async (type?: string|null) => {
+    const getRandom =async (value: number, type?: string|null) => {
         if(!type) {
-            const randomNumber = (Math.random().toString() * 1000).toFixed(0) % 3;
+            const randomNumber: number = (Math.random() * 1000).toFixed(0) % 3;
             switch (randomNumber) {
                 case 0:
                     type = 'armour';
@@ -45,14 +50,24 @@ export function useSupabase() {
             }
         }
 
-        const entries = await getEntries(type);
-        const randIndex = Math.floor(Math.random() * entries?.length);
-        console.log(entries?.length, randIndex)
+        const entries = await getEntries(type, value);
+        const randIndex = Math.floor(Math.random() * entries?.length ?? 1);
         
-        const blubb = entries[randIndex]
-        console.log('random item', blubb);
-        return blubb;
+        return entries[randIndex];
     }
 
-    return { getEntries, getArmours, getWeapons, getItems, getRandom }
+    const getRarity = () => {
+        const randomNumber = Math.floor(Math.random() * (100) + 1);
+        if (randomNumber < 50) {
+            return 1;
+        } else if (randomNumber < 80) {
+            return 2;
+        } else if (randomNumber < 95) {
+            return 3;
+        } else {
+            return 4;
+        }
+    }
+
+    return { getEntries, getRandom }
 }

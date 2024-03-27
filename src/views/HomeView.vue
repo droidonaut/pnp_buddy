@@ -3,7 +3,7 @@ import ItemGenerator from '../components/item/Itemgenerator.vue'
 </script>
 
 <template>
-  <main>
+  <main class="w-full">
     <ItemGenerator />
   </main>
 </template>
