@@ -6,39 +6,39 @@ const props = defineProps<{
 
 <template>
     <div 
-        class="mx-2 p-3 flex gap-5 flex-col border-2"
+        class="mx-2 p-6 flex gap-5 flex-col border-2 border-t-8 rounded-2xl bg-light"
         :class="{
-            'border-slate-800': item.rarity === 1,
-            'border-lime-500': item.rarity === 2,
-            'border-blue-900': item.rarity === 3,
-            'border-orange-600': item.rarity === 4
+            'border-primary': item.rarity === 1,
+            'border-green': item.rarity === 2,
+            'border-orange': item.rarity === 3,
+            'border-gold': item.rarity === 4
         }"
     >
         <div class="w-full flex justify-between">
             <div
-                class="font-bold"
+                class="font-bold text-2xl"
             >
                 {{ item.name }}
             </div>
-            <div v-if="item.defense">
-                Def: {{ item.defense }}
+            <div class="font-bold text-lg bg-white px-3 py-1 rounded-lg" v-if="item.defense">
+                Rüstung: +{{ item.defense }}
             </div>
-            <div v-else-if="item.attack">
-                Atk: {{ item.attack }}
+            <div class="font-bold text-lg bg-white px-3 py-1 rounded-lg" v-else-if="item.attack">
+                Schaden: +{{ item.attack }}
             </div>
         </div>
-        <div>{{ item.description }}</div>
+        <div class="text-xs italic max-w-96">{{ item.description }}</div>
         <div v-if="item.bonus">
             <div
                 v-for="(b, key) in item.bonus" 
-                class=""
+                class="font-bold text-lg"
             >
                 {{ key }}: {{ b }}
             </div>
         </div>
-        <div class="w-full flex justify-between">
+        <!--<div class="w-full flex justify-between">
             <div class="item-diceValue">Würfelwert: {{ item['dice_value'] }}</div>
             <div class="item-priceValue">Preis: {{ item['price_value'] }}</div>
-        </div>
+        </div>-->
     </div>
 </template>

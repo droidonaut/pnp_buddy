@@ -42,37 +42,41 @@ const getRandomLoot = async (value: number, type?: string|null) => {
 </script>
 
 <template>
-    <div class="flex w-full flex-wrap pb-6">
-        <button 
-            v-for="i in 20" 
-            :key="`loot-button-${i}`"
-            @click="getRandomLoot(i)"
-            class="basis-1/5 p-2"
-        >
-            <div 
-                class="bg-black py-2 rounded"
-                :class=" i === selectedDiceValue ? 'bg-emerald-900' : 'bg-neutral-950 opacity-60'"
-            >
-                {{ i }}
-            </div>
-        </button>
-    </div>
+    <div class="p-10">
+        <img src="../../assets/img/logo.svg" class="px-10 pb-5">
 
-    <div
-        v-if="lootedItems"
-        class="flex gap-2 flex-col pb-6"
-    >
-        <template 
-            v-for="item in lootedItems"
+        <div class="flex w-full flex-wrap pb-6">
+            <button 
+                v-for="i in 20" 
+                :key="`loot-button-${i}`"
+                @click="getRandomLoot(i)"
+                class="basis-1/5 p-2"
+            >
+                <div 
+                    class="py-2 rounded font-semibold"
+                    :class=" i === selectedDiceValue ? 'bg-secondary text-primary shadow-lg' : 'bg-primary text-white'"
+                >
+                    {{ i }}
+                </div>
+            </button>
+        </div>
+
+        <div
+            v-if="lootedItems"
+            class="flex gap-2 flex-col pb-6"
         >
-            <Item :item="item" />
-        </template>
-    </div>
+            <template 
+                v-for="item in lootedItems"
+            >
+                <Item :item="item" />
+            </template>
+        </div>
     <div
         v-if="leftValue"
-        class="mx-2"
+        class="mx-2 text-2xl font-bold text-right"
     >
-        Geld: {{ leftValue }}
+        {{ leftValue }} Stands
+    </div>
     </div>
 </template>
 
