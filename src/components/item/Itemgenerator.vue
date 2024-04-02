@@ -10,24 +10,29 @@ const selectedDiceValue = ref<number|null>();
 const leftValue = ref<number>(0);
 
 const getRandomLoot = async (value: number, type?: string|null) => {
+    // reset previous selection
     lootedItems.value = [];
     leftValue.value = 0;
     selectedDiceValue.value = value;
+    // initialize help variables
     let lootedValue = 0;
     let retries = 5;
     while (lootedValue < value) {
+        // returns when retires are exeeded to prevent infinite loop
         if( retries <= 0 ) {
             leftValue.value += (value - lootedValue);
             return;
         }
         const lootedItem = await getRandom(value - lootedValue, type);
+        // when no item is found allow some retires for maybe different table/rarity
         if(!lootedItem) {
             retries--;
             continue;
         }
+        // decide if item or money is found while money is the `dice_value` ofthe item
         if(!!(Math.floor(Math.random() * 10 + 1) % 2)) {
-            leftValue.value += lootedItem['dice_value']
-        lootedValue += lootedItem['dice_value'];
+            leftValue.value += lootedItem['dice_value'];
+            lootedValue += lootedItem['dice_value'];
             continue;
         }
         lootedItems.value.push(lootedItem);
@@ -67,7 +72,7 @@ const getRandomLoot = async (value: number, type?: string|null) => {
         v-if="leftValue"
         class="mx-2"
     >
-        übrig: {{ leftValue }}
+        Geld: {{ leftValue }}
     </div>
 </template>
 
