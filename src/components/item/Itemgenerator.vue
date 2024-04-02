@@ -30,8 +30,9 @@ const getRandomLoot = async (value: number, type?: string|null) => {
             continue;
         }
         // decide if item or money is found while money is the `dice_value` ofthe item
-        if(!!(Math.floor(Math.random() * 10 + 1) % 2)) {
-            leftValue.value += lootedItem['dice_value'];
+        if(Math.floor(Math.random() * 10 + 1) < 3) {
+            console.log('add money insted of')
+            leftValue.value += lootedItem['dice_value'] * Math.floor(Math.random() * 10 + 1);
             lootedValue += lootedItem['dice_value'];
             continue;
         }
@@ -50,8 +51,8 @@ const getRandomLoot = async (value: number, type?: string|null) => {
             class="basis-1/5 p-2"
         >
             <div 
-                class="bg-black py-2 rounded"
-                :class=" i === selectedDiceValue ? 'bg-emerald-900' : 'bg-neutral-950 opacity-60'"
+                class="py-2 rounded"
+                :class=" i === selectedDiceValue ? 'bg-emerald-900' : 'bg-emerald-500 opacity-60'"
             >
                 {{ i }}
             </div>
