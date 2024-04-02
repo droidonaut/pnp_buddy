@@ -30,8 +30,9 @@ const getRandomLoot = async (value: number, type?: string|null) => {
             continue;
         }
         // decide if item or money is found while money is the `dice_value` ofthe item
-        if(!!(Math.floor(Math.random() * 10 + 1) % 2)) {
-            leftValue.value += lootedItem['dice_value'];
+        if(Math.floor(Math.random() * 10 + 1) < 3) {
+            console.log('add money insted of')
+            leftValue.value += lootedItem['dice_value'] * Math.floor(Math.random() * 10 + 1);
             lootedValue += lootedItem['dice_value'];
             continue;
         }
@@ -42,8 +43,26 @@ const getRandomLoot = async (value: number, type?: string|null) => {
 </script>
 
 <template>
+<<<<<<< HEAD
     <div class="p-10">
         <img src="../../assets/img/logo.svg" class="px-10 pb-5">
+=======
+    <div class="flex w-full flex-wrap pb-6">
+        <button 
+            v-for="i in 20" 
+            :key="`loot-button-${i}`"
+            @click="getRandomLoot(i)"
+            class="basis-1/5 p-2"
+        >
+            <div 
+                class="py-2 rounded"
+                :class=" i === selectedDiceValue ? 'bg-emerald-900' : 'bg-emerald-500 opacity-60'"
+            >
+                {{ i }}
+            </div>
+        </button>
+    </div>
+>>>>>>> c87edb71ba6b10d7cae65b2a716d6d4584e26ae1
 
         <div class="flex w-full flex-wrap pb-6">
             <button 

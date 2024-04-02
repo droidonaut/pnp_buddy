@@ -18,7 +18,7 @@ export function useSupabase() {
         const {data} = await supabase
             .from(tableName)
             .select()
-            .lt('dice_value', diceValue)
+            .lte('dice_value', diceValue)
             .eq('rarity', rarity);
         return data;
     }
