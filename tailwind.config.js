@@ -13,7 +13,6 @@ export default {
         orange: '#d77a61',
         gold: '#dca422',
         light: '#f7f1de'
-
       }
     },
   },

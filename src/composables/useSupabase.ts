@@ -8,6 +8,18 @@ export function useSupabase() {
         supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_TOKEN)
     }
 
+    const getUser = async (userID: string) => {
+        if(!supabase) {
+            createSupabaseClient();
+        }
+        const {data} = await supabase
+            .from('user')
+            .select()
+            .eq('id', userID);
+        console.log(data)
+        return data[0];
+    }
+
     const getEntries = async (tableName: string, diceValue: number) => {
         // getRandom();
         if(!supabase) {
@@ -69,5 +81,5 @@ export function useSupabase() {
         }
     }
 
-    return { getEntries, getRandom }
+    return { getEntries, getRandom, getUser }
 }
